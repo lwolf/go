@@ -1,3 +1,5 @@
+VERSION=$(shell git rev-list --count master)-$(shell git rev-parse --short HEAD)
+DOCKER_REPO=lwolf/go
 SRC = $(shell find web/assets -maxdepth 1 -type f)
 DST = $(patsubst %.scss,%.css,$(patsubst %.ts,%.js,$(subst web/assets,.build/assets,$(SRC))))
 
@@ -26,3 +28,10 @@ web/bindata.go: .build/bin/go-bindata .build/assets $(DST)
 
 clean:
 	rm -rf .build/assets web/bindata.go
+
+docker-build:
+	echo ${VERSION}
+	docker build -t ${DOCKER_REPO}:${VERSION} .
+
+docker-push:
+	docker push ${DOCKER_REPO}:${VERSION}

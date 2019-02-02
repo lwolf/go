@@ -5,13 +5,13 @@ RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
 RUN apt-get install -y nodejs closure-compiler
 RUN npm install -g typescript sass
 
-WORKDIR /go/src/github.com/kellegous/go
+WORKDIR /go/src/github.com/lwolf/go
 COPY . .
 RUN make ALL
-RUN go get -u -d github.com/kellegous/go
+#RUN go get -u -d github.com/lwolf/go
 RUN CGO_ENABLED=0 go build -v -o go .
 
 FROM alpine:latest
 WORKDIR /root/
-COPY --from=0 /go/src/github.com/kellegous/go/go .
+COPY --from=0 /go/src/github.com/lwolf/go/go .
 CMD ["./go"]
